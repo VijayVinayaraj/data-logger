@@ -10,7 +10,7 @@
 
 
 int16_t readMQ6() ;
-
+String parseDataForMqtt();
 #define trigPin 16
 #define echoPin  17
 #define SOUND_SPEED 0.034
@@ -154,9 +154,9 @@ String readTime(){
 }
 
 
-int16_t readADC0() {
-  return ads.readADC_SingleEnded(0);
-}
+// int16_t readADC0() {
+//   return ads.readADC_SingleEnded(0);
+// }
 
 int16_t readLightIntensity() {
   return map(ads.readADC_SingleEnded(1),1,30000,100,1);
@@ -166,9 +166,9 @@ int16_t readMQ6() {
   return ads.readADC_SingleEnded(2);
 }
 
-int16_t readADC3() {
-  return ads.readADC_SingleEnded(3);
-}
+// int16_t readADC3() {
+//   return ads.readADC_SingleEnded(3);
+// }
 
 float convertToVolts(int16_t adcValue) {
   return ads.computeVolts(adcValue);
@@ -203,16 +203,43 @@ float readGasvalue(){
 
 
 
+
+
+String parseDataForMqtt(){
+  float pressure= readPressure();
+  float altitude = readAltitude();
+  float seaLevelAltitude = readSealevelPressure();
+  float humidity = readHumidity();
+  String time = readTime();
+  uint16_t lightIntensity = readLightIntensity();
+  float distanceHCSR04 = readDistanceFromHCSR04();
+  float gasValue = readGasvalue();
+
+String jsonString = "{\"time\":\"" + time + "\"" +
+              ",\"pressure\":" + String(pressure, 2) +
+               ",\"altitude\":" + String(altitude, 2) +
+               ",\"seaLevelAltitude\":" + String(seaLevelAltitude, 2) +
+               ",\"humidity\":" + String(humidity, 2) +
+               ",\"lightIntensity\":" + String(lightIntensity) +
+               ",\"distanceHCSR04\":" + String(distanceHCSR04, 2) +
+               ",\"gasValue\":" + String(gasValue, 2) + "}";
+  return jsonString;
+
+}
+
+
+
+
 void setup() {
   Serial.begin(115200);
   while (!Serial)
     delay(10);  // Wait for serial monitor to open
-//   initAHT10();
-//  initBme180();
-//  initRTC();
-//  initADC();
-//  initHCSR04();
-// initMQ6();
+  initAHT10();
+ initBme180();
+ initRTC();
+ initADC();
+ initHCSR04();
+initMQ6();
 mqttInit();
 
 }
@@ -221,6 +248,9 @@ mqttInit();
 
 
 void loop() {
-mqttSendMessage();
+
+  // Serial.println(parseDataForMqtt());
+  String mqttMessage = parseDataForMqtt();
+mqttSendMessage(mqttMessage);
 mqttLoop();
 }

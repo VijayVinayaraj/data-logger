@@ -14,7 +14,7 @@ void mqttInit();
 #define CLIENTNAME "DATALOGGER"
 
 
-void mqttSendMessage();
+void mqttSendMessage(String message);
 void mqttLoop();
 
 #endif

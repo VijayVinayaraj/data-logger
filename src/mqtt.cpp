@@ -18,32 +18,23 @@ void mqttInit(){
 
 void onConnectionEstablished()
 {
-  // Subscribe to "mytopic/test" and display received message to Serial
- 
-
-  // Publish a message to "mytopic/test"
-  client.publish("mytopic/test", "This is a message"); // You can activate the retain flag by setting the third parameter to true
-
-  client.executeDelayed(5 * 1000, []() {
-    client.publish("mytopic/wildcardtest/test123", "This is a message sent 5 seconds later");
-  });
+  
 
 
 
 }
 
-void mqttSendMessage(){
-String message = "messga"+78;
+void mqttSendMessage(String message){
 
 if(client.isMqttConnected()){
 
 client.publish("topic/data",message);
-    delay(1000);
+    delay(800);
 }
 
 }
 
 void mqttLoop(){
-mqttSendMessage();
+
     client.loop();
 }
