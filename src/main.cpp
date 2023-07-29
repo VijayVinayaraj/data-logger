@@ -206,6 +206,7 @@ float readGasvalue(){
 
 
 String parseDataForMqtt(){
+  float temperature = readTemperature();
   float pressure= readPressure();
   float altitude = readAltitude();
   float seaLevelAltitude = readSealevelPressure();
@@ -222,6 +223,7 @@ String jsonString = "{\"time\":\"" + time + "\"" +
                ",\"humidity\":" + String(humidity, 2) +
                ",\"lightIntensity\":" + String(lightIntensity) +
                ",\"distanceHCSR04\":" + String(distanceHCSR04, 2) +
+                ",\"temperature\":" + String(temperature, 2) +
                ",\"gasValue\":" + String(gasValue, 2) + "}";
   return jsonString;
 
